@@ -2,7 +2,7 @@
 
 use Illuminate\Mail\Message;
 use Illuminate\Mail\Mailer as CoreMailer;
-use Swift_SignedMessage;
+use Swift_Message;
 use Swift_Signers_DKIMSigner;
 use Config;
 
@@ -17,14 +17,10 @@ class Mailer extends CoreMailer {
 		// Get the DKIM selector.
 		$selector = Config::get('mail.dkim.selector');
 
+        $message = new Message(new Swift_Message);
+
 		// If we have a DKIM selector, then add the signing.
 		if (!empty($selector)) {
-			// Use the signed message with support for signing.
-			// So long as there is a selector we will do this, even if a private
-			// key is not set. This is handy if the application wants to add its
-			// own signatures later.
-			$message = new Message(new Swift_SignedMessage);
-
 			// Get the key and domain name.
 			// Ideally these would be specific to the selector, with the selector being
 			// chosen according to the domain of the sending address. At this stage we do
@@ -47,9 +43,6 @@ class Mailer extends CoreMailer {
 				
 				$message->attachSigner($dkim_signer);
 			}
-		} else {
-			// Non-signed message.
-			$message = new Message(new Swift_Message);
 		}
 
 		// If a global from address has been specified we will set it on every message
