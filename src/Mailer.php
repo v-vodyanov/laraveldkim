@@ -46,12 +46,11 @@ class Mailer extends CoreMailer {
 		}
 
 		// If a global from address has been specified we will set it on every message
-		// instances so the developer does not have to repeat themselves every time
-		// they create a new message. We will just go ahead and push the address.
-		if (isset($this->from['address']))
-		{
-			$message->from($this->from['address'], $this->from['name']);
-		}
+        // instances so the developer does not have to repeat themselves every time
+        // they create a new message. We will just go ahead and push the address.
+        if (! empty($this->from['address'])) {
+            $message->from($this->from['address'], $this->from['name']);
+        }
 
 		return $message;
 	}
