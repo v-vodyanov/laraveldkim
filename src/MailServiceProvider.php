@@ -35,6 +35,10 @@ class MailServiceProvider extends CoreMailServiceProvider {
                 $app['view'], $app['swift.mailer'], $app['events']
             );
 
+            if ($app->bound('queue')) {
+                $mailer->setQueue($app['queue']);
+            }
+
             if (method_exists($this, 'setMailerDependencies')) {
                 $this->setMailerDependencies($mailer, $app);
             }
